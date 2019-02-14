@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,23 @@ public class SearchController {
         return "search";
     }
 
-    // TODO #1 - Create handler to process search request and display results
+   // TODO #1 - Create handler to process search request and display results
+     @RequestMapping(value = "results")
+     public String searchResults(Model model, @RequestParam String searchTerm, @RequestParam String searchType) {
+
+     ArrayList<HashMap<String, String>> jobs;
+
+     if (searchType.equals("all") || (searchTerm.equals(""))) {
+         jobs = JobData.findByValue(searchTerm);
+     }
+     else
+     {
+         jobs = JobData.findByColumnAndValue(searchType, searchTerm);
+     }
+     model.addAttribute("columns", ListController.columnChoices);
+     model.addAttribute("jobs", jobs);
+
+     return "search";
+     }
 
 }
